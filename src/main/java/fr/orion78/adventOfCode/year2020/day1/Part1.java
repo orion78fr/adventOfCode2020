@@ -1,31 +1,29 @@
 package fr.orion78.adventOfCode.year2020.day1;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import fr.orion78.adventOfCode.year2020.util.Utils;
+
 import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Part1 {
-    public static void main(String[] args) {
-        try (BufferedReader r = new BufferedReader(new FileReader("day1.txt"))) {
-            // Récupérer la liste des dépenses en tant qu'entier
-            Set<Integer> expenses = r.lines().map(Integer::parseInt).collect(Collectors.toSet());
+    public static void main(String[] args) throws IOException {
+        int result = Utils.readFileForDay(1, Part1::compute);
 
-            int result = -1;
-            // Pour chacun des entiers de la liste
-            for (Integer i : expenses) {
-                // Chercher si y'a le complément à 2020
-                if (expenses.contains(2020 - i)) {
-                    result = i;
-                    break;
-                }
+        // Expected : 319531
+        System.out.format("%d x %d = %d", result, 2020 - result, (2020 - result) * result);
+    }
+
+    public static int compute(Stream<String> lines) {
+        Set<Integer> expenses = lines.map(Integer::parseInt).collect(Collectors.toSet());
+
+        for (Integer i : expenses) {
+            if (expenses.contains(2020 - i)) {
+                return i;
             }
-
-            // Expected : 319531
-            System.out.format("%d x %d = %d", result, 2020 - result, (2020 - result) * result);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
+        throw new RuntimeException();
     }
 }
