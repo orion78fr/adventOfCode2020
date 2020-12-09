@@ -11,11 +11,22 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Part2bis {
-    private static record Edge(int acc) {
+    private static class Edge {
+        private int acc;
+
+        public Edge(int acc) {
+            this.acc = acc;
+        }
+
         public Edge() {
             this(0);
         }
+
+        public int acc() {
+            return acc;
+        }
     }
+
 
     private enum OpType {
         NOP,
@@ -23,8 +34,16 @@ public class Part2bis {
         JMP
     }
 
-    private static record Instruction(OpType operation, int argument) {
+    private static class Instruction {
+        private OpType operation;
+        private int argument;
+
+        public Instruction(OpType operation, int argument) {
+            this.operation = operation;
+            this.argument = argument;
+        }
     }
+
 
     public static void main(String[] args) throws IOException {
         main();
@@ -84,7 +103,7 @@ public class Part2bis {
         GraphPath<Instruction, Edge> path = shortestPath.getPath(instructions.get(0), instructions.get(instructions.size() - 1));
 
         if (path.getWeight() != 1) {
-            throw new RuntimeException();
+            throw new RuntimeException("Weight " + path.getWeight());
         }
 
         return path.getEdgeList().stream().mapToInt(Edge::acc).sum();
