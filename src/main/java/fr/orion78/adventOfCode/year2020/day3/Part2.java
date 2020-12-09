@@ -1,27 +1,31 @@
 package fr.orion78.adventOfCode.year2020.day3;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import fr.orion78.adventOfCode.year2020.util.Utils;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Part2 {
-    public static void main(String[] args) {
-        try (BufferedReader r = new BufferedReader(new FileReader("day3.txt"))) {
-            List<String> rows = r.lines().collect(Collectors.toList());
+    public static void main(String[] args) throws IOException {
+        long count = Utils.readFileForDay(3, Part2::compute);
 
-            int count11 = getCount(rows, 1, 1);
-            int count31 = getCount(rows, 3, 1);
-            int count51 = getCount(rows, 5, 1);
-            int count71 = getCount(rows, 7, 1);
-            int count12 = getCount(rows, 1, 2);
+        // Expected : 3772314000
+        System.out.println(count + " trees");
+    }
 
-            // Expected : 3772314000
-            System.out.println((long)count11 * (long)count31 * (long)count51 * (long)count71 * (long)count12);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static long compute(Stream<String> lines) {
+        List<String> rows = lines.collect(Collectors.toList());
+
+        long count11 = getCount(rows, 1, 1);
+        long count31 = getCount(rows, 3, 1);
+        long count51 = getCount(rows, 5, 1);
+        long count71 = getCount(rows, 7, 1);
+        long count12 = getCount(rows, 1, 2);
+
+        // Expected : 3772314000
+        return count11 * count31 * count51 * count71 * count12;
     }
 
     private static int getCount(List<String> rows, int slopex, int slopey) {

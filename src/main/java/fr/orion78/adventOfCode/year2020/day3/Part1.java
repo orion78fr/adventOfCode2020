@@ -1,32 +1,35 @@
 package fr.orion78.adventOfCode.year2020.day3;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import fr.orion78.adventOfCode.year2020.util.Utils;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Part1 {
-    public static void main(String[] args) {
-        try (BufferedReader r = new BufferedReader(new FileReader("day3.txt"))) {
-            List<String> rows = r.lines().collect(Collectors.toList());
+    public static void main(String[] args) throws IOException {
+        int count = Utils.readFileForDay(3, Part1::compute);
 
-            int x = 0;
-            int y = 0;
+        // Expected : 195
+        System.out.println(count + " trees");
+    }
 
-            int count = 0;
-            while (y < rows.size()) {
-                if (rows.get(y).charAt(x % rows.get(y).length()) == '#') {
-                    count++;
-                }
-                x += 3;
-                y++;
+    public static int compute(Stream<String> lines) {
+        List<String> rows = lines.collect(Collectors.toList());
+
+        int x = 0;
+        int y = 0;
+
+        int count = 0;
+        while (y < rows.size()) {
+            if (rows.get(y).charAt(x % rows.get(y).length()) == '#') {
+                count++;
             }
-
-            // Expected : 195
-            System.out.println(count + " trees");
-        } catch (IOException e) {
-            e.printStackTrace();
+            x += 3;
+            y++;
         }
+
+        return count;
     }
 }

@@ -1,28 +1,25 @@
 package fr.orion78.adventOfCode.year2020.day5;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import fr.orion78.adventOfCode.year2020.util.Utils;
+
 import java.io.IOException;
 import java.util.BitSet;
+import java.util.stream.Stream;
 
 public class Part2 {
-    public static void main(String[] args) {
-        try (BufferedReader r = new BufferedReader(new FileReader("day5.txt"))) {
-            BitSet set = r.lines().filter(s -> !s.isEmpty())
-                    .mapToInt(Part2::getSeatNB)
-                    .collect(BitSet::new, BitSet::set, BitSet::and);
+    public static void main(String[] args) throws IOException {
+        int freeSeat = Utils.readFileForDay(5, Part2::compute);
 
-            int bit = set.nextClearBit(set.nextSetBit(0));
+        // Expected : 583
+        System.out.println("Free seat : " + freeSeat);
+    }
 
-            if (!set.get(bit - 1) || !set.get(bit + 1)) {
-                System.out.println("Seat is not surrounded ?");
-            }
+    public static int compute(Stream<String> lines) {
+        BitSet set = lines.filter(s -> !s.isEmpty())
+                .mapToInt(Part2::getSeatNB)
+                .collect(BitSet::new, BitSet::set, BitSet::and);
 
-            // Expected : 583
-            System.out.println("Free seat : " + bit);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return set.nextClearBit(set.nextSetBit(0));
     }
 
     private static int getSeatNB(String seat) {
