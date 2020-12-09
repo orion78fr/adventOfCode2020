@@ -33,14 +33,7 @@ public class Part2 {
         JMP
     }
 
-    private static class Instruction {
-        private final OpType operation;
-        private final int argument;
-
-        public Instruction(OpType operation, int argument) {
-            this.operation = operation;
-            this.argument = argument;
-        }
+    private static record Instruction(OpType operation, int argument) {
     }
 
     public static void main(String[] args) {

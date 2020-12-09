@@ -1,11 +1,12 @@
 package fr.orion78.adventOfCode.year2020.day8;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import fr.orion78.adventOfCode.year2020.util.Utils;
+
 import java.io.IOException;
 import java.util.BitSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Part1 {
     private enum OpType {
@@ -14,45 +15,40 @@ public class Part1 {
         JMP
     }
 
-    private static class Instruction {
-        private OpType operation;
-        private int argument;
-
-        public Instruction(OpType operation, int argument) {
-            this.operation = operation;
-            this.argument = argument;
-        }
+    private static record Instruction(OpType operation, int argument) {
     }
 
-    public static void main(String[] args) {
-        try (BufferedReader r = new BufferedReader(new FileReader("day8.txt"))) {
-            List<Instruction> instructions = r.lines().map(l -> {
-                String[] split = l.split(" ");
-                return new Instruction(OpType.valueOf(split[0].toUpperCase()), Integer.parseInt(split[1]));
-            }).collect(Collectors.toList());
+    public static void main(String[] args) throws IOException {
+        int accumulator = Utils.readFileForDay(8, Part1::compute);
 
-            BitSet visitedOps = new BitSet();
-            int accumulator = 0;
-            int operationPointer = 0;
+        // Expected : 1553
+        System.out.println("Accumulator after loop : " + accumulator);
+    }
 
-            // While we've not looped
-            while (!visitedOps.get(operationPointer)) {
-                visitedOps.set(operationPointer);
+    public static int compute(Stream<String> lines) {
+        List<Instruction> instructions = lines.map(l -> {
+            String[] split = l.split(" ");
+            return new Instruction(OpType.valueOf(split[0].toUpperCase()), Integer.parseInt(split[1]));
+        }).collect(Collectors.toList());
 
-                Instruction instruction = instructions.get(operationPointer);
-                switch (instruction.operation) {
-                    case NOP -> {
-                    }
-                    case ACC -> accumulator += instruction.argument;
-                    case JMP -> operationPointer += instruction.argument - 1;
+        BitSet visitedOps = new BitSet();
+        int accumulator = 0;
+        int operationPointer = 0;
+
+        // While we've not looped
+        while (!visitedOps.get(operationPointer)) {
+            visitedOps.set(operationPointer);
+
+            Instruction instruction = instructions.get(operationPointer);
+            switch (instruction.operation) {
+                case NOP -> {
                 }
-                operationPointer++;
+                case ACC -> accumulator += instruction.argument;
+                case JMP -> operationPointer += instruction.argument - 1;
             }
-
-            // Expected : 1553
-            System.out.println("Accumulator after loop : " + accumulator);
-        } catch (IOException e) {
-            e.printStackTrace();
+            operationPointer++;
         }
+
+        return accumulator;
     }
 }

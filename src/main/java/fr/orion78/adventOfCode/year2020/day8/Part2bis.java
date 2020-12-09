@@ -28,19 +28,9 @@ import java.util.stream.Collectors;
 @Warmup(iterations = 1)
 @Measurement(iterations = 3)
 public class Part2bis {
-    private static class Edge {
-        private int acc;
-
-        public Edge(int acc) {
-            this.acc = acc;
-        }
-
+    private static record Edge(int acc) {
         public Edge() {
             this(0);
-        }
-
-        public int getAcc() {
-            return acc;
         }
     }
 
@@ -50,14 +40,7 @@ public class Part2bis {
         JMP
     }
 
-    private static class Instruction {
-        private OpType operation;
-        private int argument;
-
-        public Instruction(OpType operation, int argument) {
-            this.operation = operation;
-            this.argument = argument;
-        }
+    private static record Instruction(OpType operation, int argument) {
     }
 
     public static void main(String[] args) {
@@ -117,7 +100,7 @@ public class Part2bis {
                 return;
             }
 
-            int accumulator = path.getEdgeList().stream().mapToInt(Edge::getAcc).sum();
+            int accumulator = path.getEdgeList().stream().mapToInt(Edge::acc).sum();
             // Expected : 1877
             //System.out.println("Accumulator when done : " + accumulator);
         } catch (IOException e) {
