@@ -1,32 +1,15 @@
 package fr.orion78.adventOfCode.year2020.day8;
 
+import fr.orion78.adventOfCode.year2020.util.Utils;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Warmup;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-@State(Scope.Benchmark)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Fork(value = 3,
-        jvmArgsAppend = {"-server", "-disablesystemassertions"})
-@Warmup(iterations = 1)
-@Measurement(iterations = 3)
 public class Part2bis {
     private static record Edge(int acc) {
         public Edge() {
@@ -43,68 +26,67 @@ public class Part2bis {
     private static record Instruction(OpType operation, int argument) {
     }
 
-    public static void main(String[] args) {
-        test();
+    public static void main(String[] args) throws IOException {
+        main();
     }
 
-    @Benchmark
-    public static void test() {
-        try (BufferedReader r = new BufferedReader(new FileReader("day8.txt"))) {
-            List<Instruction> instructions = r.lines().map(l -> {
-                String[] split = l.split(" ");
-                return new Instruction(OpType.valueOf(split[0].toUpperCase()), Integer.parseInt(split[1]));
-            }).collect(Collectors.toList());
+    public static void main() throws IOException {
+        int accumulator = Utils.readFileForDay(8, Part2bis::compute);
 
-            DirectedWeightedMultigraph<Instruction, Edge> graph = new DirectedWeightedMultigraph<>(Edge.class);
+        // Expected : 1877
+        System.out.println("Accumulator when done : " + accumulator);
+    }
 
-            // O(N)
-            instructions.forEach(graph::addVertex);
+    public static int compute(Stream<String> lines) {
+        List<Instruction> instructions = lines.map(l -> {
+            String[] split = l.split(" ");
+            return new Instruction(OpType.valueOf(split[0].toUpperCase()), Integer.parseInt(split[1]));
+        }).collect(Collectors.toList());
 
-            // O(N)
-            for (int i = 0, instructionsSize = instructions.size(); i < instructionsSize - 1; i++) {
-                Instruction instruction = instructions.get(i);
+        DirectedWeightedMultigraph<Instruction, Edge> graph = new DirectedWeightedMultigraph<>(Edge.class);
 
-                switch (instruction.operation) {
-                    case NOP -> {
-                        Edge e = new Edge();
-                        graph.addEdge(instruction, instructions.get(i + 1), e);
-                        graph.setEdgeWeight(e, 0);
+        // O(N)
+        instructions.forEach(graph::addVertex);
 
-                        e = new Edge();
-                        graph.addEdge(instruction, instructions.get(i + instruction.argument), e);
-                        graph.setEdgeWeight(e, 1);
-                    }
-                    case ACC -> {
-                        Edge e = new Edge(instruction.argument);
-                        graph.addEdge(instruction, instructions.get(i + 1), e);
-                        graph.setEdgeWeight(e, 0);
-                    }
-                    case JMP -> {
-                        Edge e = new Edge();
-                        graph.addEdge(instruction, instructions.get(i + instruction.argument), e);
-                        graph.setEdgeWeight(e, 0);
+        // O(N)
+        for (int i = 0, instructionsSize = instructions.size(); i < instructionsSize - 1; i++) {
+            Instruction instruction = instructions.get(i);
 
-                        e = new Edge();
-                        graph.addEdge(instruction, instructions.get(i + 1), e);
-                        graph.setEdgeWeight(e, 1);
-                    }
+            switch (instruction.operation) {
+                case NOP -> {
+                    Edge e = new Edge();
+                    graph.addEdge(instruction, instructions.get(i + 1), e);
+                    graph.setEdgeWeight(e, 0);
+
+                    e = new Edge();
+                    graph.addEdge(instruction, instructions.get(i + instruction.argument), e);
+                    graph.setEdgeWeight(e, 1);
+                }
+                case ACC -> {
+                    Edge e = new Edge(instruction.argument);
+                    graph.addEdge(instruction, instructions.get(i + 1), e);
+                    graph.setEdgeWeight(e, 0);
+                }
+                case JMP -> {
+                    Edge e = new Edge();
+                    graph.addEdge(instruction, instructions.get(i + instruction.argument), e);
+                    graph.setEdgeWeight(e, 0);
+
+                    e = new Edge();
+                    graph.addEdge(instruction, instructions.get(i + 1), e);
+                    graph.setEdgeWeight(e, 1);
                 }
             }
-
-            DijkstraShortestPath<Instruction, Edge> shortestPath = new DijkstraShortestPath<>(graph);
-            // O(N * log(N))
-            GraphPath<Instruction, Edge> path = shortestPath.getPath(instructions.get(0), instructions.get(instructions.size() - 1));
-
-            if (path.getWeight() != 1) {
-                System.out.println("Wut ?");
-                return;
-            }
-
-            int accumulator = path.getEdgeList().stream().mapToInt(Edge::acc).sum();
-            // Expected : 1877
-            //System.out.println("Accumulator when done : " + accumulator);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
+        DijkstraShortestPath<Instruction, Edge> shortestPath = new DijkstraShortestPath<>(graph);
+        // O(N * log(N))
+        GraphPath<Instruction, Edge> path = shortestPath.getPath(instructions.get(0), instructions.get(instructions.size() - 1));
+
+        if (path.getWeight() != 1) {
+            throw new RuntimeException();
+        }
+
+        return path.getEdgeList().stream().mapToInt(Edge::acc).sum();
     }
 }
