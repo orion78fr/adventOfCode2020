@@ -75,7 +75,7 @@ public class Bench {
     }
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder().include(Bench.class.getSimpleName()).build();
+        Options opt = new OptionsBuilder().include(Bench.class.getCanonicalName()).build();
 
         new Runner(opt).run();
     }

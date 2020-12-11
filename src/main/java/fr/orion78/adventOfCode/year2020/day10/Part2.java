@@ -12,7 +12,7 @@ public class Part2 {
     public static void main(String[] args) throws IOException {
         long arrangements = Utils.readFileForDay(10, Part2::compute);
 
-        // Expected :
+        // Expected : 86812553324672
         System.out.println("Number of different arrangements : " + arrangements);
     }
 
