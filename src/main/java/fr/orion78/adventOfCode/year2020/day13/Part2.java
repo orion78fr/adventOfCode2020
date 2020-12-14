@@ -12,7 +12,7 @@ public class Part2 {
     public static void main(String[] args) throws IOException {
         BigInteger time = Utils.readFileForDay(13, Part2::compute);
 
-        // Expected :
+        // Expected : 560214575859998
         System.out.println("Time " + time);
     }
 
