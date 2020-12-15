@@ -4,8 +4,9 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class RingBuffer<T> {
-    private Class<T> clazz;
-    private Object[] buffer;
+    private final Class<T> clazz;
+    private final Object[] buffer;
+
     private int pointer;
 
     public RingBuffer(Class<T> clazz, int size) {
