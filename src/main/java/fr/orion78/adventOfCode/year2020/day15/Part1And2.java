@@ -27,7 +27,7 @@ public class Part1And2 {
     }
 
     public static int compute(List<Integer> values, int maxIter) {
-        Map<Integer, Integer> previousOccurrences = new HashMap<>();
+        /*Map<Integer, Integer> previousOccurrences = new HashMap<>();
 
         for (int i = 0, valuesSize = values.size() - 1; i < valuesSize; i++) {
             previousOccurrences.put(values.get(i), i);
@@ -36,14 +36,28 @@ public class Part1And2 {
         int previousNumber = values.get(values.size() - 1);
 
         for (int i = values.size() - 1; i < maxIter - 1; i++) {
-            int newNumber;
-            if (previousOccurrences.containsKey(previousNumber)) {
-                newNumber = i - previousOccurrences.get(previousNumber);
-            } else {
-                newNumber = 0;
-            }
+            int newNumber = i - previousOccurrences.getOrDefault(previousNumber, i);
 
             previousOccurrences.put(previousNumber, i);
+            previousNumber = newNumber;
+        }
+
+        return previousNumber;*/
+
+        // This executes way faster even though it's way dirtier...
+        Object[] previousOccurrences = new Object[maxIter];
+
+        for (int i = 0, valuesSize = values.size() - 1; i < valuesSize; i++) {
+            previousOccurrences[values.get(i)] = i;
+        }
+
+        int previousNumber = values.get(values.size() - 1);
+
+        for (int i = values.size() - 1; i < maxIter - 1; i++) {
+            Object previousNumberOccurence = previousOccurrences[previousNumber];
+            int newNumber = i - (previousNumberOccurence == null ?  i : (int)previousNumberOccurence);
+
+            previousOccurrences[previousNumber] =  i;
             previousNumber = newNumber;
         }
 
