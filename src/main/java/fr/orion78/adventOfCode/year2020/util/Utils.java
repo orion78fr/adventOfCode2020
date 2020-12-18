@@ -14,13 +14,23 @@ public class Utils {
         }
     }
 
-    public static <T, V> T readFileForDay(int day, BiFunction<Stream<String>, V, T> f, V arg) throws IOException {
+    public static <T, U> T readFileForDay(int day, BiFunction<Stream<String>, U, T> f, U arg) throws IOException {
         try (var r = new BufferedReader(new FileReader(getFile(day)))) {
             return f.apply(r.lines(), arg);
         }
     }
 
+    public static <T, U, V> T readFileForDay(int day, TriFunction<Stream<String>, U, V, T> f, U arg1, V arg2) throws IOException {
+        try (var r = new BufferedReader(new FileReader(getFile(day)))) {
+            return f.apply(r.lines(), arg1, arg2);
+        }
+    }
+
     private static String getFile(int day) {
         return String.format("day%02d.txt", day);
+    }
+
+    public interface TriFunction<T, U, V, R> {
+        R apply(T t, U u, V v);
     }
 }
