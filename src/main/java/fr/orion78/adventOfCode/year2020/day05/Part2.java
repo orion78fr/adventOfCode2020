@@ -15,14 +15,9 @@ public class Part2 {
 
     public static int compute(Stream<String> lines) {
         BitSet set = lines.filter(s -> !s.isEmpty())
-                .mapToInt(Part2::getSeatNB)
+                .mapToInt(Part1::getSeatNB)
                 .collect(BitSet::new, BitSet::set, BitSet::and);
 
         return set.nextClearBit(set.nextSetBit(0));
-    }
-
-    private static int getSeatNB(String seat) {
-        return Integer.parseInt(seat.replace('B', '1').replace('F', '0')
-                .replace('R', '1').replace('L', '0'), 2);
     }
 }

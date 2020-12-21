@@ -3,6 +3,7 @@ package fr.orion78.adventOfCode.year2020.day05;
 import fr.orion78.adventOfCode.year2020.util.Utils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class Part1 {
@@ -19,7 +20,6 @@ public class Part1 {
     }
 
     public static int getSeatNB(String seat) {
-        return Integer.parseInt(seat.replace('B', '1').replace('F', '0')
-                .replace('R', '1').replace('L', '0'), 2);
+        return (int) Utils.fromBinary(seat, List.of('B', 'R'));
     }
 }
