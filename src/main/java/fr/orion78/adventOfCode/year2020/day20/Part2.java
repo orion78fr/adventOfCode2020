@@ -176,8 +176,13 @@ public class Part2 {
             cury++;
         } while (continuey);
 
+        long seaMonsterSize = Arrays.stream(SEA_MONSTER)
+                .flatMap(s -> s.chars().boxed())
+                .filter(i -> i == Tile.ROUGH_WATER_CHAR)
+                .count();
 
+        int seaMonsters = 2;
 
-        return 0;
+        return tm.cardinality() - seaMonsters * seaMonsterSize;
     }
 }

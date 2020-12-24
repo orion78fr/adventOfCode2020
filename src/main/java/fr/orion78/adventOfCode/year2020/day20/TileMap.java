@@ -40,4 +40,10 @@ public class TileMap {
         tiles.put(p, t);
         tileOrientations.put(p, orientation);
     }
+
+    public long cardinality(){
+        return this.tiles.values().stream()
+                .mapToLong(Tile::cardinality)
+                .sum();
+    }
 }
