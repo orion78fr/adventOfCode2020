@@ -18,7 +18,7 @@ public class TileMap {
         this.tileOrientations.put(new Point2d(0, 0), topLeftCornerConnectedOrientation);
     }
 
-    public Tile get(int x, int y) {
+    public Tile getTile(int x, int y) {
         return tiles.get(new Point2d(x, y));
     }
 

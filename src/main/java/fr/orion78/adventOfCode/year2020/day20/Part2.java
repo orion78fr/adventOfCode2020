@@ -117,7 +117,7 @@ public class Part2 {
                 continuex = false;
 
                 long curBorder = tm.getBorder(curx, cury, Orientation.NORMAL_EAST);
-                int curTileNum = tm.get(curx, cury).getTileNum();
+                int curTileNum = tm.getTile(curx, cury).getTileNum();
                 Optional<Tile> correspondingTileOpt = possibleConnections.get(curBorder).stream()
                         .filter(t -> !t.equals(curTileNum))
                         .findAny()
@@ -147,7 +147,7 @@ public class Part2 {
             } while (continuex);
 
             long border = tm.getBorder(0, cury, Orientation.NORMAL_SOUTH);
-            int curTileNum = tm.get(0, cury).getTileNum();
+            int curTileNum = tm.getTile(0, cury).getTileNum();
             Optional<Tile> correspondingTileOpt = possibleConnections.get(border).stream()
                     .filter(t -> !t.equals(curTileNum))
                     .findAny()
@@ -175,6 +175,8 @@ public class Part2 {
 
             cury++;
         } while (continuey);
+
+
 
         return 0;
     }
