@@ -10,12 +10,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Part2 {
+    private static final String[] SEA_MONSTER = new String[]{
+            "                  # ",
+            "#    ##    ##    ###",
+            " #  #  #  #  #  #   "
+    };
+
     public static void main(String[] args) throws IOException {
         long n = Utils.readFileForDay(20, Part2::compute);
 
@@ -81,9 +88,94 @@ public class Part2 {
             throw new RuntimeException("Corner connections");
         }
 
-        TileMap tm = new TileMap();
+        Orientation topLeftCornerConnectedOrientation;
 
-        //tm.put(0, 0, corners.get(0), tileOrientation);
+        if (topLeftCornerConnectedOrientations.contains(Orientation.NORMAL_EAST)) {
+            if (topLeftCornerConnectedOrientations.contains(Orientation.NORMAL_SOUTH)) {
+                topLeftCornerConnectedOrientation = Orientation.NORMAL_NORTH;
+            } else {
+                topLeftCornerConnectedOrientation = Orientation.NORMAL_WEST;
+            }
+        } else {
+            if (topLeftCornerConnectedOrientations.contains(Orientation.NORMAL_SOUTH)) {
+                topLeftCornerConnectedOrientation = Orientation.NORMAL_EAST;
+            } else {
+                topLeftCornerConnectedOrientation = Orientation.NORMAL_SOUTH;
+            }
+        }
+
+        TileMap tm = new TileMap(topLeftCorner, topLeftCornerConnectedOrientation);
+
+        boolean continuey;
+        int cury = 0;
+        do {
+            continuey = false;
+
+            boolean continuex;
+            int curx = 0;
+            do {
+                continuex = false;
+
+                long curBorder = tm.getBorder(curx, cury, Orientation.NORMAL_EAST);
+                int curTileNum = tm.get(curx, cury).getTileNum();
+                Optional<Tile> correspondingTileOpt = possibleConnections.get(curBorder).stream()
+                        .filter(t -> !t.equals(curTileNum))
+                        .findAny()
+                        .map(tiles::get);
+
+                if (correspondingTileOpt.isPresent()) {
+                    continuex = true;
+                    Tile correspondingTile = correspondingTileOpt.get();
+
+                    int idx = Utils.longList(correspondingTile.getBoth()).indexOf(curBorder);
+                    Orientation o = switch (idx) {
+                        case 0 -> Orientation.FLIPPED_EAST;
+                        case 1 -> Orientation.FLIPPED_NORTH;
+                        case 2 -> Orientation.FLIPPED_WEST;
+                        case 3 -> Orientation.FLIPPED_SOUTH;
+                        case 4 -> Orientation.NORMAL_EAST;
+                        case 5 -> Orientation.NORMAL_NORTH;
+                        case 6 -> Orientation.NORMAL_WEST;
+                        case 7 -> Orientation.NORMAL_SOUTH;
+                        default -> throw new RuntimeException("IMPOSSIBLE");
+                    };
+
+                    tm.put(curx + 1, cury, correspondingTile, o);
+                }
+
+                curx++;
+            } while (continuex);
+
+            long border = tm.getBorder(0, cury, Orientation.NORMAL_SOUTH);
+            int curTileNum = tm.get(0, cury).getTileNum();
+            Optional<Tile> correspondingTileOpt = possibleConnections.get(border).stream()
+                    .filter(t -> !t.equals(curTileNum))
+                    .findAny()
+                    .map(tiles::get);
+
+            if (correspondingTileOpt.isPresent()) {
+                continuey = true;
+                Tile correspondingTile = correspondingTileOpt.get();
+
+                int idx = Utils.longList(correspondingTile.getBoth()).indexOf(border);
+                Orientation o = switch (idx) {
+                    case 0 -> Orientation.FLIPPED_NORTH;
+                    case 1 -> Orientation.FLIPPED_WEST;
+                    case 2 -> Orientation.FLIPPED_SOUTH;
+                    case 3 -> Orientation.FLIPPED_EAST;
+                    case 4 -> Orientation.NORMAL_NORTH;
+                    case 5 -> Orientation.NORMAL_WEST;
+                    case 6 -> Orientation.NORMAL_SOUTH;
+                    case 7 -> Orientation.NORMAL_EAST;
+                    default -> throw new RuntimeException("IMPOSSIBLE");
+                };
+
+                tm.put(0, cury + 1, correspondingTile, o);
+            }
+
+            cury++;
+        } while (continuey);
+
         return 0;
     }
 }

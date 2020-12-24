@@ -3,6 +3,7 @@ package fr.orion78.adventOfCode.year2020.util;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.AbstractList;
 import java.util.List;
 import java.util.PrimitiveIterator;
 import java.util.function.BiFunction;
@@ -67,6 +68,25 @@ public class Utils {
 
     public static IntStream revIntRange(int from, int to) {
         return IntStream.range(from, to).map(i -> to - i + from - 1);
+    }
+
+    public static List<Long> longList(long[] l) {
+        return new AbstractList<>() {
+            public Long get(int i) {
+                return l[i];
+            }
+
+            // throws NPE if val == null
+            public Long set(int i, Long val) {
+                Long oldVal = l[i];
+                l[i] = val;
+                return oldVal;
+            }
+
+            public int size() {
+                return l.length;
+            }
+        };
     }
 
     public interface TriFunction<T, U, V, R> {

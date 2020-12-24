@@ -5,10 +5,10 @@ public enum Orientation {
     NORMAL_EAST(1, false),
     NORMAL_SOUTH(2, false),
     NORMAL_WEST(3, false),
-    FLIPPED_NORTH(4, true),
-    FLIPPED_EAST(5, true),
-    FLIPPED_SOUTH(6, true),
-    FLIPPED_WEST(7, true);
+    FLIPPED_NORTH(0, true),
+    FLIPPED_EAST(1, true),
+    FLIPPED_SOUTH(2, true),
+    FLIPPED_WEST(3, true);
 
     public static final Orientation[] NORMAL_ORIENTATIONS = {NORMAL_NORTH, NORMAL_EAST, NORMAL_SOUTH, NORMAL_WEST};
     public static final Orientation[] FLIPPED_ORIENTATIONS = {FLIPPED_NORTH, FLIPPED_EAST, FLIPPED_SOUTH, FLIPPED_WEST};

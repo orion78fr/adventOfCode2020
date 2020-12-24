@@ -9,11 +9,9 @@ import java.util.stream.Stream;
 
 public class Part2bis {
     public static void main(String[] args) throws IOException {
-        while (true) {
-            long n = Utils.readFileForDay(23, Part2bis::compute, 10_000_000, 1_000_000);
+        long n = Utils.readFileForDay(23, Part2bis::compute, 10_000_000, 1_000_000);
 
-            System.out.println("Result is " + n);
-        }
+        System.out.println("Result is " + n);
     }
 
     public static long compute(Stream<String> inputStream, int iter, int maxCup) {

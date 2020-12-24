@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Tile {
-
     private final int tileNum;
     private final List<String> tileParts;
     private final long[] borders;
@@ -69,5 +68,9 @@ public class Tile {
 
     public long[] getBoth() {
         return both;
+    }
+
+    public int getTileSize() {
+        return tileParts.get(0).length() - 2;
     }
 }

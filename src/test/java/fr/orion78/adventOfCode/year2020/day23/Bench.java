@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 3)
 @Measurement(iterations = 5)
 public class Bench {
-    //@Benchmark
+    @Benchmark
     public void part2() throws IOException {
         long result = Utils.readFileForDay(23, Part2::compute, 10_000_000, 1_000_000);
         if (result != 538935646702L) {
