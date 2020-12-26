@@ -17,11 +17,102 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Part2 {
-    private static final String[] SEA_MONSTER = new String[]{
-            "                  # ",
-            "#    ##    ##    ###",
-            " #  #  #  #  #  #   "
-    };
+    private static final List<List<String>> SEA_MONSTERS = List.of(
+            List.of("                  # ",
+                    "#    ##    ##    ###",
+                    " #  #  #  #  #  #   "),
+            List.of(" #  #  #  #  #  #   ",
+                    "#    ##    ##    ###",
+                    "                  # "),
+            List.of(" #                  ",
+                    "###    ##    ##    #",
+                    "   #  #  #  #  #  # "),
+            List.of("   #  #  #  #  #  # ",
+                    "###    ##    ##    #",
+                    " #                  "),
+
+            List.of(" # ",
+                    " ##",
+                    " # ",
+                    "#  ",
+                    "   ",
+                    "   ",
+                    "#  ",
+                    " # ",
+                    " # ",
+                    "#  ",
+                    "   ",
+                    "   ",
+                    "#  ",
+                    " # ",
+                    " # ",
+                    "#  ",
+                    "   ",
+                    "   ",
+                    "#  ",
+                    " # "),
+            List.of(" # ",
+                    "## ",
+                    " # ",
+                    "  #",
+                    "   ",
+                    "   ",
+                    "  #",
+                    " # ",
+                    " # ",
+                    "  #",
+                    "   ",
+                    "   ",
+                    "  #",
+                    " # ",
+                    " # ",
+                    "  #",
+                    "   ",
+                    "   ",
+                    "  #",
+                    " # "),
+            List.of(" # ",
+                    "#  ",
+                    "   ",
+                    "   ",
+                    "#  ",
+                    " # ",
+                    " # ",
+                    "#  ",
+                    "   ",
+                    "   ",
+                    "#  ",
+                    " # ",
+                    " # ",
+                    "#  ",
+                    "   ",
+                    "   ",
+                    "#  ",
+                    " # ",
+                    " ##",
+                    " # "),
+            List.of(" # ",
+                    "  #",
+                    "   ",
+                    "   ",
+                    "  #",
+                    " # ",
+                    " # ",
+                    "  #",
+                    "   ",
+                    "   ",
+                    "  #",
+                    " # ",
+                    " # ",
+                    "  #",
+                    "   ",
+                    "   ",
+                    "  #",
+                    " # ",
+                    "## ",
+                    " # ")
+    );
+
 
     public static void main(String[] args) throws IOException {
         long n = Utils.readFileForDay(20, Part2::compute);
@@ -176,13 +267,23 @@ public class Part2 {
             cury++;
         } while (continuey);
 
-        long seaMonsterSize = Arrays.stream(SEA_MONSTER)
+        long seaMonsterSize = SEA_MONSTERS.get(0)
+                .stream()
                 .flatMap(s -> s.chars().boxed())
                 .filter(i -> i == Tile.ROUGH_WATER_CHAR)
                 .count();
 
-        int seaMonsters = 2;
+        var seaMonsterOccurences = SEA_MONSTERS.stream()
+                .map(tm::countPattern)
+                .filter(i -> i > 0)
+                .findFirst();
 
-        return tm.cardinality() - seaMonsters * seaMonsterSize;
+        List<Long> collect = SEA_MONSTERS.stream().map(tm::countPattern).filter(i -> i > 0).collect(Collectors.toList());
+
+        if (seaMonsterOccurences.isEmpty()) {
+            throw new RuntimeException();
+        }
+
+        return tm.cardinality() - seaMonsterOccurences.get() * seaMonsterSize;
     }
 }

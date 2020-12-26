@@ -56,10 +56,6 @@ public class Tile {
         return tileNum;
     }
 
-    public List<String> getTileParts() {
-        return tileParts;
-    }
-
     public long[] getBorders() {
         return borders;
     }
@@ -84,5 +80,9 @@ public class Tile {
                 .flatMap(s -> s.chars().boxed().skip(1).limit(tileSize))
                 .filter(i -> i == ROUGH_WATER_CHAR)
                 .count();
+    }
+
+    public boolean getVal(int x, int y){
+        return tileParts.get(y+1).charAt(x+1) == ROUGH_WATER_CHAR;
     }
 }
