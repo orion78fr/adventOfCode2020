@@ -1,6 +1,5 @@
 package fr.orion78.adventOfCode.year2020.day20;
 
-import fr.orion78.adventOfCode.year2020.day15.Part1And2;
 import fr.orion78.adventOfCode.year2020.util.Utils;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -24,8 +23,8 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Fork(value = 2,
         jvmArgsAppend = {"-server", "-disablesystemassertions"})
-@Warmup(iterations = 3)
-@Measurement(iterations = 5)
+@Warmup(iterations = 4, time = 5)
+@Measurement(iterations = 3, time = 5)
 public class Bench {
     @Benchmark
     public void part2() throws IOException {

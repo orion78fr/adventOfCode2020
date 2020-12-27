@@ -273,12 +273,10 @@ public class Part2 {
                 .filter(i -> i == Tile.ROUGH_WATER_CHAR)
                 .count();
 
-        var seaMonsterOccurences = SEA_MONSTERS.stream()
+        var seaMonsterOccurences = SEA_MONSTERS.parallelStream()
                 .map(tm::countPattern)
                 .filter(i -> i > 0)
-                .findFirst();
-
-        List<Long> collect = SEA_MONSTERS.stream().map(tm::countPattern).filter(i -> i > 0).collect(Collectors.toList());
+                .findAny();
 
         if (seaMonsterOccurences.isEmpty()) {
             throw new RuntimeException();

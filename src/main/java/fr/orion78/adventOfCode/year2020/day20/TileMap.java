@@ -58,10 +58,13 @@ public class TileMap {
     public long countPattern(List<String> pattern) {
         long patternCount = pattern.stream().flatMap(s -> s.chars().boxed()).filter(c -> c == '#').count();
 
-        int maxX = tileSize * (this.maxX + 1);
-        int maxY = tileSize * (this.maxY + 1);
+        int patternX = pattern.get(0).length();
+        int patternY = pattern.size();
 
-        return IntStream.range(0, maxY)
+        int maxX = tileSize * (this.maxX + 1) - patternX;
+        int maxY = tileSize * (this.maxY + 1) - patternY;
+
+        return IntStream.range(0, maxY).parallel()
                 .boxed()
                 .flatMap(y -> IntStream.range(0, maxX).mapToObj(x -> new Point2d(x, y)))
                 .filter(p -> IntStream.range(0, pattern.size())
